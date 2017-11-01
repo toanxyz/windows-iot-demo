@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Net.Http;
@@ -12,19 +13,18 @@ namespace BackgroundApplicationDemo
     {
         private BackgroundTaskDeferral _deferral;
 
-        public void Run(IBackgroundTaskInstance taskInstance)
+        public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            //var a = 5;
-            //_deferral = taskInstance.GetDeferral();
+            _deferral = taskInstance.GetDeferral();
 
-            //taskInstance.Canceled += TaskInstanceOnCanceled;
+            taskInstance.Canceled += TaskInstanceOnCanceled;
 
-            //Task.WaitAll(AzureIoTHub.SendDeviceToCloudMessageAsync());
+            await AzureIoTHub.ReceiveCloudToDeviceMessageAsync();
         }
 
         private void TaskInstanceOnCanceled(IBackgroundTaskInstance taskInstance, BackgroundTaskCancellationReason reason)
         {
-            //_deferral.Complete();
+            _deferral.Complete();
         }
     }
 }
