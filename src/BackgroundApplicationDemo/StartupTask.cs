@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 
 namespace BackgroundApplicationDemo
@@ -11,11 +12,19 @@ namespace BackgroundApplicationDemo
     {
         private BackgroundTaskDeferral _deferral;
 
-        public async void Run(IBackgroundTaskInstance taskInstance)
+        public void Run(IBackgroundTaskInstance taskInstance)
         {
-            _deferral = taskInstance.GetDeferral();
+            //var a = 5;
+            //_deferral = taskInstance.GetDeferral();
 
-            await AzureIoTHub.SendDeviceToCloudMessageAsync();
+            //taskInstance.Canceled += TaskInstanceOnCanceled;
+
+            //Task.WaitAll(AzureIoTHub.SendDeviceToCloudMessageAsync());
+        }
+
+        private void TaskInstanceOnCanceled(IBackgroundTaskInstance taskInstance, BackgroundTaskCancellationReason reason)
+        {
+            //_deferral.Complete();
         }
     }
 }
