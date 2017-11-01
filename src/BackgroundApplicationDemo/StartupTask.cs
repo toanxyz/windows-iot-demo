@@ -11,9 +11,11 @@ namespace BackgroundApplicationDemo
     {
         private BackgroundTaskDeferral _deferral;
 
-        public void Run(IBackgroundTaskInstance taskInstance)
+        public async void Run(IBackgroundTaskInstance taskInstance)
         {
             _deferral = taskInstance.GetDeferral();
+
+            await AzureIoTHub.SendDeviceToCloudMessageAsync();
         }
     }
 }
