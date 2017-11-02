@@ -220,7 +220,7 @@ namespace BackgroundApplicationDemo.BME280
         /// To read a 16-bit value from a memory address and return it in little endian format
         /// </summary>
         /// <param name="memoryAddress">The memory address</param>
-        /// <returns>Stored data at memory address</returns>
+        /// <returns>Data in little endian format</returns>
         private ushort Read16BitValueFromAssignedMemory(byte memoryAddress)
         {
             ushort value = 0;
