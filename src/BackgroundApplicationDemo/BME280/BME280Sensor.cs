@@ -8,6 +8,9 @@ namespace BackgroundApplicationDemo.BME280
 {
     internal class BME280Sensor : IBME280Sensor
     {
+        /// <summary>
+        /// Memory address of each register
+        /// </summary>
         private enum RegisterMemoryAddress : byte
         {
             /// <summary>
@@ -142,9 +145,9 @@ namespace BackgroundApplicationDemo.BME280
             */
 
             // Read the MSB, LSB and bits 7:4 (XLSB) of the temperature from the BME280 registers
-            byte temperatureDataMSB = ReadByte((byte)RegisterMemoryAddress.TemperatureDataMSB);
-            byte temperatureDataLSB = ReadByte((byte)RegisterMemoryAddress.TemperatureDataLSB);
-            byte temperatureDataXLSB = ReadByte((byte)RegisterMemoryAddress.TemperatureDataXLSB);
+            byte temperatureDataMSB = Read8BitValueFromAssignedMemory((byte)RegisterMemoryAddress.TemperatureDataMSB);
+            byte temperatureDataLSB = Read8BitValueFromAssignedMemory((byte)RegisterMemoryAddress.TemperatureDataLSB);
+            byte temperatureDataXLSB = Read8BitValueFromAssignedMemory((byte)RegisterMemoryAddress.TemperatureDataXLSB);
 
             // Combine the values into a 32-bit integer
             int rawTemperature = (temperatureDataMSB << 12) + (temperatureDataLSB << 4) + (temperatureDataXLSB >> 4);
@@ -214,11 +217,11 @@ namespace BackgroundApplicationDemo.BME280
         }
 
         /// <summary>
-        /// To read a 16-bit value from a register and return it in little endian format
+        /// To read a 16-bit value from a memory address and return it in little endian format
         /// </summary>
         /// <param name="memoryAddress">The memory address</param>
         /// <returns>Stored data at memory address</returns>
-        private ushort ReadDataFromMemory(byte memoryAddress)
+        private ushort Read16BitValueFromAssignedMemory(byte memoryAddress)
         {
             ushort value = 0;
             byte[] writeBuffer = { 0x00 };
@@ -235,17 +238,17 @@ namespace BackgroundApplicationDemo.BME280
         }
 
         /// <summary>
-        /// To read an 8-bit value from a register
+        /// To read an 8-bit value from a memory address
         /// </summary>
-        /// <param name="register"></param>
+        /// <param name="memoryAddress"></param>
         /// <returns></returns>
-        private byte ReadByte(byte register)
+        private byte Read8BitValueFromAssignedMemory(byte memoryAddress)
         {
             byte value = 0;
             byte[] writeBuffer = { 0x00 };
             byte[] readBuffer = { 0x00 };
 
-            writeBuffer[0] = register;
+            writeBuffer[0] = memoryAddress;
 
             _bme280Device.WriteRead(writeBuffer, readBuffer);
             value = readBuffer[0];
@@ -263,9 +266,9 @@ namespace BackgroundApplicationDemo.BME280
             _calibrationData = new CalibrationData();
 
             // Read temperature calibration data
-            _calibrationData.CompensationT1 = (ushort)ReadDataFromMemory((byte)RegisterMemoryAddress.CompensationT1);
-            _calibrationData.CompensationT2 = (short)ReadDataFromMemory((byte)RegisterMemoryAddress.CompensationT2);
-            _calibrationData.CompensationT3 = (short)ReadDataFromMemory((byte)RegisterMemoryAddress.CompensationT3);
+            _calibrationData.CompensationT1 = (ushort)Read16BitValueFromAssignedMemory((byte)RegisterMemoryAddress.CompensationT1);
+            _calibrationData.CompensationT2 = (short)Read16BitValueFromAssignedMemory((byte)RegisterMemoryAddress.CompensationT2);
+            _calibrationData.CompensationT3 = (short)Read16BitValueFromAssignedMemory((byte)RegisterMemoryAddress.CompensationT3);
 
             await Task.Delay(1);
 
