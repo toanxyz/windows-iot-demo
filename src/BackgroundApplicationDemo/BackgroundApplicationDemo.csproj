@@ -96,6 +96,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AzureIoTHub.cs" />
+    <None Include="BME280.bak" />
+    <Compile Include="BME280.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
